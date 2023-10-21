@@ -9,6 +9,7 @@ export default class Scene {
   }
 
   init() {
-    this.entityManager.addEntity( 'player' );
+    const playerId = this.entityManager.addEntity( 'player' );
+
   }
 }

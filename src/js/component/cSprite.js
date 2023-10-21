@@ -1,5 +1,9 @@
 export default class CSprite {
-  constructor( sprite ) {
+  constructor() {
+    this.sprite;
+  }
+
+  setSprite( sprite ) {
     this.sprite = sprite;
   }
 }

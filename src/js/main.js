@@ -10,8 +10,6 @@ canvas.width = Math.floor(240*16/9);
 
 const game = new Game( canvas.width, canvas.height );
 game.setScene( new Scene01() )
-const player = game.scene.entityManager.addEntity('player');
-player.addComponent( 'mesh' );
 
 start.addEventListener( 'click', () => {
   function animate() {
