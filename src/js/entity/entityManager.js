@@ -1,12 +1,20 @@
+import Vec2 from "../class/vec2.js";
 import CSprite from "../component/cSprite.js";
+import CTransform from "../component/cTransform.js";
 import Entity from "./entity.js";
 
 export default class EntityManager {
-  constructor() {
-    this.counter      = 0;
-    this.entities     = {};
-    this.entityTypeMap    = {};
-    this.componentMap = {};
+  constructor( game ) {
+    this.game              = game;
+    this.counter           = 0;
+    this.entities          = {};
+    this.entityTypeMap     = {};
+    this.componentMap      = {};
+    this.entitiesToAdd     = [];
+    this.entityIdsToRemove = [];
+  }
+
+  update() {
   }
 
   addEntity( type ) {
@@ -20,8 +28,35 @@ export default class EntityManager {
     return this.counter++;
   }
 
+  // Entities
+  addPlayer(x = 0, y = 0) {
+    const id = this.addEntity('player');
+    this.game.addSystem( 'sRender' );
+    this.game.addSystem( 'sPhysics' );
+    this.addCTransform(id, x, y);
+    //this.addCSprite(id)
+  }
+
   // Components
-  addCSprite( entityId, spritesheet ) {
-    this.entities[ entityId ].components[ 'CSprite' ] = new CSprite()
+  addCTransform(id, x = 0, y = 0, vx = 0, vy = 0 ) {
+    if ( ! this.componentMap.hasOwnProperty( 'cTransform' ) ) {
+      this.componentMap[ 'cTransform' ] = {};
+    }
+
+    if ( ! this.entities[id].components.hasOwnProperty( 'cTransform' ) ) {
+      this.entities[id]['components']['cTransform'] = new CTransform( new Vec2(x, y) );
+      this.componentMap['cTransform'][id] = this.entities[id]['components']['cTransform'];
+    }
+  }
+
+  addCSprite( id ) {
+    if ( ! this.componentMap.hasOwnProperty( 'cSprite' ) ) {
+      this.componentMap[ 'cSprite' ] = {};
+    }
+
+    if ( ! this.entities[id].components.hasOwnProperty( 'cSprite' ) ) {
+      this.entities[id]['components']['cSprite'] = new CSprite();
+      this.componentMap['cSprite'][id] = this.entities[id]['components']['cSprite'];
+    }
   }
 }

@@ -5,9 +5,6 @@ export default class Entity {
     this.parentId   = parentId;
     this.components = {};
     this.systems    = {};
-  }
-
-  addComponent( component ) {
-    this.components[ component ] = 'component';
+    this.alive      = true;
   }
 }
