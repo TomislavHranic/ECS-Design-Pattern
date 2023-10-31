@@ -1,5 +1,6 @@
 import Scene from "./scene/scene.js";
-import { sPhysics } from "./system/sPhysics.js";
+import { sGravity } from "./system/sGravity.js";
+import { sInputHandler } from "./system/sInputHandler.js";
 import { sRender } from "./system/sRender.js";
 
 export default class Game {
@@ -20,23 +21,30 @@ export default class Game {
       case 'sRender':
         this.addSRender();
         break;
-      case 'sPhysics':
-        this.addSPhysics();
+      case 'sGravity':
+        this.addSGravity();
         break;
       default:
+        this.addSInputHandler();
         break;
     }
   }
 
   // Systems
-  addSPhysics() {
-    if ( ! this.scene.systems.hasOwnProperty( 'physics' ) ) {
-      this.scene.systems[ 'sPhysics' ] = sPhysics;
+  addSInputHandler() {
+    if ( ! this.scene.systems.hasOwnProperty( 'sInputHandler' ) ) {
+      this.scene.systems[ 'sInputHandler' ] = sInputHandler;
+    }
+  }
+
+  addSGravity() {
+    if ( ! this.scene.systems.hasOwnProperty( 'sGravity' ) ) {
+      this.scene.systems[ 'sGravity' ] = sGravity;
     }
   }
 
   addSRender() {
-    if ( ! this.scene.systems.hasOwnProperty( 'render' ) ) {
+    if ( ! this.scene.systems.hasOwnProperty( 'sRender' ) ) {
       this.scene.systems[ 'sRender' ] = sRender;
     }
   }
