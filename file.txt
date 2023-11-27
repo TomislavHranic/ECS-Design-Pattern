@@ -1,4 +1,6 @@
-game
-  scene
-    systems
-    entity manager
+game (adds listeners*, sets scene*, tracks game state*, updates scene, renders scene)
+  scene (adds systems used and entities via entity manager on init, maps systems)
+    systems (stores systems)
+    entity manager (ads and destroys entities, maps and unmaps components)
+      enitites (store components)
+        components (raw data)

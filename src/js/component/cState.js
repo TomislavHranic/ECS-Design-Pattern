@@ -1,8 +1,5 @@
-const states = {
-  RIGHT,
-  LEFT,
-  UP,
-  DOWN,
-  JUMP,
-  CROUCH,
+export default class CState {
+  constructor() {
+    this.value = 0;
+  }
 }

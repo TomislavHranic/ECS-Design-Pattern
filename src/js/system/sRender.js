@@ -1,3 +1,3 @@
-export const sRender = ( ctx, transform, sprite = null ) => {
-  ctx.fillRect( transform.position.x, transform.position.y, 50, 50 );
+export const sRender = ( game, entityId ) => {
+  game.ctx.fillRect( game.scene.entityManager.entities[entityId].components.cTransform.position.x, game.scene.entityManager.entities[entityId].components.cTransform.position.y, 50, 50 );
 }

@@ -13,23 +13,23 @@ game.setScene( 'intro' );
 let frameCount = 0;
 
 start.addEventListener( 'click', () => {
-  function gameLoop() {
-    ctx.clearRect( 0, 0, canvas.width, canvas.height );
+  if ( game.scene ) {
+    game.addInputListener();
 
-    // Update
-    if ( false ) {
-      frameCount++;
-    } else {
-      frameCount = 0;
-      game.scene.entityManager.update(); // add/remove entities;
-      game.scene.update();               // update the game;
+    function gameLoop() {
+      ctx.clearRect( 0, 0, canvas.width, canvas.height );
+
+      // Update
+      if ( false ) {
+        frameCount++;
+      } else {
+        frameCount = 0;
+        game.update();               // update the game;
+      }
+
+      requestAnimationFrame(gameLoop);
     }
 
-    // Render
-    game.scene.render();
-
-    requestAnimationFrame(gameLoop);
+    gameLoop();
   }
-
-  gameLoop();
 });

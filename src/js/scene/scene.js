@@ -1,4 +1,8 @@
 import EntityManager from "../entity/entityManager.js";
+import { sGravity } from "../system/sGravity.js";
+import { sInputHandler } from "../system/sInputHandler.js";
+import { sRender } from "../system/sRender.js";
+import { sMovement } from "../system/sMovement.js";
 
 export default class Scene {
   constructor( game, sceneName ) {
@@ -9,28 +13,65 @@ export default class Scene {
   }
 
   init() {
-    this.entityManager.addPlayer(50, 50);
+    this.addSystem( 'sRender' );
+    this.addSystem( 'sGravity' );
+    this.addSystem( 'sMovement' );
+    this.addSystem( 'sInputHandler' );
+    const player = this.entityManager.addPlayer(50.1, 50.1);
+    this.mapEntitiesToSystems(player, ['sRender', 'sGravity', 'sMovement', 'sInputHandler' ]);
   }
 
-  update() {
-    if ( this.entityManager.componentMap.hasOwnProperty( 'cInput' ) && this.systems.hasOwnProperty( 'sInputHandler' ) ) {
-      for ( let key in this.entityManager.componentMap.cInput ) {
-        this.systems.sInputHandler( this.game, this.entityManager.componentMap['cTransform'][key], this.entityManager.componentMap.cWeight[key].weight );
+  mapEntitiesToSystems( entityId, systems = [] ) {
+    systems.forEach(system => {
+      if ( ! this.entityManager.systemMap.hasOwnProperty(system) ) {
+        this.entityManager.systemMap[system] = [];
       }
-    }
 
-    if ( this.entityManager.componentMap.hasOwnProperty( 'cWeight' ) && this.systems.hasOwnProperty( 'sGravity' ) ) {
-      for ( let key in this.entityManager.componentMap.cWeight ) {
-        this.systems.sGravity( this.game, this.entityManager.componentMap['cTransform'][key], this.entityManager.componentMap.cWeight[key].weight );
-      }
+      this.entityManager.systemMap[system].push(entityId);
+    });
+  }
+
+  // Add systems
+  addSystem( systemName ) {
+    switch ( systemName ) {
+      case 'sRender':
+        this.addSRender();
+        break;
+      case 'sGravity':
+        this.addSGravity();
+        break;
+      case 'sMovement':
+        this.addSMovement();
+        break;
+      case 'sInputHandler':
+        this.addSInputHandler();
+        break;
+      default:
+        break;
     }
   }
 
-  render() {
-    if ( this.entityManager.componentMap.hasOwnProperty( 'cTransform' ) && this.systems.hasOwnProperty( 'sRender' ) ) {
-      for ( let key in this.entityManager.componentMap.cTransform ) {
-        this.systems.sRender( this.game.ctx, this.entityManager.componentMap.cTransform[key] );
-      }
+  addSGravity() {
+    if ( ! this.systems.hasOwnProperty( 'sGravity' ) ) {
+      this.systems[ 'sGravity' ] = sGravity;
+    }
+  }
+
+  addSMovement() {
+    if ( ! this.systems.hasOwnProperty( 'sMovement' ) ) {
+      this.systems[ 'sMovement' ] = sMovement;
+    }
+  }
+
+  addSInputHandler() {
+    if ( ! this.systems.hasOwnProperty( 'sInputHandler' ) ) {
+      this.systems[ 'sInputHandler' ] = sInputHandler;
+    }
+  }
+
+  addSRender() {
+    if ( ! this.systems.hasOwnProperty( 'sRender' ) ) {
+      this.systems[ 'sRender' ] = sRender;
     }
   }
 }

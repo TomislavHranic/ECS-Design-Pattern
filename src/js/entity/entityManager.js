@@ -5,6 +5,7 @@ import CBoundingBox from "../component/cBoundingBox.js";
 import Entity from "./entity.js";
 import CInput from "../component/cInput.js";
 import CWeight from "../component/cWeight.js";
+import CState from "../component/cState.js";
 
 export default class EntityManager {
   constructor( game ) {
@@ -13,40 +14,40 @@ export default class EntityManager {
     this.entities          = {};
     this.entityTypeMap     = {};
     this.componentMap      = {};
+    this.systemMap         = {}; // each system holds array of entity ids using it
     this.entitiesToAdd     = [];
     this.entityIdsToRemove = [];
   }
 
-  update() {
-  }
-
+  // Entities
   addEntity( type ) {
-    this.entities[ this.counter ] = new Entity( this.counter, type );
+    const entityId = this.counter;
+    this.entities[ entityId ] = new Entity( entityId, type );
 
     if ( ! this.entityTypeMap.hasOwnProperty( type ) ) {
       this.entityTypeMap[ type ] = {};
     }
-    this.entityTypeMap[ type ][ this.counter ] = this.entities[ this.counter ];
+    this.entityTypeMap[ type ][ entityId ] = this.entities[ entityId ];
 
-    return this.counter++;
+    this.counter++;
+
+    return entityId;
   }
 
-  // Entities
-  addPlayer(x = 0, y = 0) {
+  addPlayer(x = 0.0, y = 0.0, systems = {} ) {
     const width = 50;
     const height = 50;
     const id = this.addEntity('player');
-    this.game.addSystem( 'sRender' );
-    this.game.addSystem( 'sGravity' );
     this.addCTransform(id, x, y);
     this.addCBoundingBox(id, x, y, width, height);
-    this.addCWeight(id, 0.3);
+    this.addCWeight(id, 0.2);
     this.addCInput(id);
-    //this.addCSprite(id)
+    this.addCState(id);
+    return id;
   }
 
   // Components
-  addCTransform(id, x = 0, y = 0, vx = 0, vy = 0 ) {
+  addCTransform(id, x = 0.0, y = 0.0, vx = 0.0, vy = 0.0 ) {
     if ( ! this.componentMap.hasOwnProperty( 'cTransform' ) ) {
       this.componentMap[ 'cTransform' ] = {};
     }
@@ -80,7 +81,6 @@ export default class EntityManager {
   }
 
   addCInput( id ) {
-    this.game.addSystem( 'sInputHandler' );
     if ( ! this.componentMap.hasOwnProperty( 'cInput' ) ) {
       this.componentMap[ 'cInput' ] = {};
     }
@@ -99,6 +99,17 @@ export default class EntityManager {
     if ( ! this.entities[id].components.hasOwnProperty( 'cWeight' ) ) {
       this.entities[id]['components']['cWeight'] = new CWeight( weight );
       this.componentMap['cWeight'][id] = this.entities[id]['components']['cWeight'];
+    }
+  }
+
+  addCState( id ) {
+    if ( ! this.componentMap.hasOwnProperty( 'cState' ) ) {
+      this.componentMap[ 'cState' ] = {};
+    }
+
+    if ( ! this.entities[id].components.hasOwnProperty( 'cState' ) ) {
+      this.entities[id]['components']['cState'] = new CState();
+      this.componentMap['cState'][id] = this.entities[id]['components']['cState'];
     }
   }
 }

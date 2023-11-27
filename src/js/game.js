@@ -1,51 +1,50 @@
 import Scene from "./scene/scene.js";
-import { sGravity } from "./system/sGravity.js";
-import { sInputHandler } from "./system/sInputHandler.js";
-import { sRender } from "./system/sRender.js";
 
 export default class Game {
   constructor( ctx, width, height ) {
-    this.ctx   = ctx;
-    this.w     = width;
-    this.h     = height;
+    this.ctx       = ctx;
+    this.width     = width;
+    this.height    = height;
+    this.gameState = {
+      score: 0,
+    }
     this.scene;
   }
 
+  // Set scene
   setScene( sceneName ) {
     this.scene = new Scene( this, sceneName );
     this.scene.init();
+    this.addInputListener();
   }
 
-  addSystem( systemName ) {
-    switch ( systemName ) {
-      case 'sRender':
-        this.addSRender();
-        break;
-      case 'sGravity':
-        this.addSGravity();
-        break;
-      default:
-        this.addSInputHandler();
-        break;
+  // Add input listeners
+  addInputListener() {
+    if ( this.scene.entityManager.componentMap.hasOwnProperty('cInput') ) {
+      window.addEventListener( 'keydown', (e) => {
+        Object.keys(this.scene.entityManager.componentMap.cInput).forEach( key => {
+          if ( this.scene.entityManager.componentMap.cInput[key].keys.indexOf( e.code ) === -1 ) {
+            this.scene.entityManager.componentMap.cInput[key].keys.push( e.code );
+          }
+        });
+      });
+
+      window.addEventListener( 'keyup', (e) => {
+        Object.keys(this.scene.entityManager.componentMap.cInput).forEach( key => {
+          if ( this.scene.entityManager.componentMap.cInput[key].keys.indexOf( e.code ) >= 0 ) {
+            this.scene.entityManager.componentMap.cInput[key].keys.splice( this.scene.entityManager.componentMap.cInput[key].keys.indexOf( e.code ), 1 );
+          }
+        });
+      });
     }
   }
 
-  // Systems
-  addSInputHandler() {
-    if ( ! this.scene.systems.hasOwnProperty( 'sInputHandler' ) ) {
-      this.scene.systems[ 'sInputHandler' ] = sInputHandler;
-    }
-  }
-
-  addSGravity() {
-    if ( ! this.scene.systems.hasOwnProperty( 'sGravity' ) ) {
-      this.scene.systems[ 'sGravity' ] = sGravity;
-    }
-  }
-
-  addSRender() {
-    if ( ! this.scene.systems.hasOwnProperty( 'sRender' ) ) {
-      this.scene.systems[ 'sRender' ] = sRender;
-    }
+  // Update the scene
+  update() {
+    Object.keys(this.scene.entityManager.systemMap).forEach( systemName => {
+      this.scene.entityManager.systemMap[systemName].forEach( entityId => {
+        this.scene.systems[systemName]( this, entityId );
+      });
+    });
   }
 }
