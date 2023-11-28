@@ -10,26 +10,24 @@ canvas.width = Math.floor(240*16/9);
 const game = new Game( ctx, canvas.width, canvas.height );
 game.setScene( 'intro' );
 
-let frameCount = 0;
+let lastTime = 0;
 
 start.addEventListener( 'click', () => {
   if ( game.scene ) {
-    game.addInputListener();
 
-    function gameLoop() {
+    function gameLoop(timestamp) {
+      const deltaTime = timestamp - lastTime;
+      lastTime = timestamp;
+
       ctx.clearRect( 0, 0, canvas.width, canvas.height );
 
       // Update
-      if ( false ) {
-        frameCount++;
-      } else {
-        frameCount = 0;
-        game.update();               // update the game;
-      }
+      game.deltaTime = deltaTime;
+      game.update();  // update the game;
 
       requestAnimationFrame(gameLoop);
     }
 
-    gameLoop();
+    gameLoop(0);
   }
 });

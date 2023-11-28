@@ -6,15 +6,18 @@ import Entity from "./entity.js";
 import CInput from "../component/cInput.js";
 import CWeight from "../component/cWeight.js";
 import CState from "../component/cState.js";
+import { playerSpritesheet } from "../spritesheets/player.js";
+import { blockSpritesheet } from "../spritesheets/block.js";
 
 export default class EntityManager {
   constructor( game ) {
     this.game              = game;
     this.counter           = 0;
     this.entities          = {};
+    this.spritesheets      = {};
     this.entityTypeMap     = {};
     this.componentMap      = {};
-    this.systemMap         = {}; // each system holds array of entity ids using it
+    this.systemMap         = {};    // each system holds array of entity ids using it
     this.entitiesToAdd     = [];
     this.entityIdsToRemove = [];
   }
@@ -34,15 +37,34 @@ export default class EntityManager {
     return entityId;
   }
 
-  addPlayer(x = 0.0, y = 0.0, systems = {} ) {
-    const width = 50;
-    const height = 50;
+  addPlayer(x = 0.0, y = 0.0, width = 32, height = 32 ) {
+    if ( ! this.spritesheets.hasOwnProperty( 'player' ) ) {
+      this.spritesheets['player'] = playerSpritesheet;
+    }
+
     const id = this.addEntity('player');
+
     this.addCTransform(id, x, y);
-    this.addCBoundingBox(id, x, y, width, height);
+    this.addCBoundingBox(id, width, height, { left: 0.15, right: 0.15 });
     this.addCWeight(id, 0.2);
     this.addCInput(id);
     this.addCState(id);
+    this.addCSprite( id, this.spritesheets.player);
+
+    return id;
+  }
+
+  addBlock( x = 0.0, y = 0.0, width = 16, height = 16 ) {
+    if ( ! this.spritesheets.hasOwnProperty( 'block' ) ) {
+      this.spritesheets['block'] = blockSpritesheet;
+    }
+
+    const id = this.addEntity('block');
+
+    this.addCTransform(id, x, y);
+    this.addCBoundingBox(id, width, height);
+    this.addCSprite(id, this.spritesheets.block);
+
     return id;
   }
 
@@ -58,24 +80,42 @@ export default class EntityManager {
     }
   }
 
-  addCBoundingBox(id, x = 0, y = 0, width = 0, height = 0) {
+  addCBoundingBox(id, width = 0, height = 0, definedPadding = {} ) {
     if ( ! this.componentMap.hasOwnProperty( 'cBoundingBox' ) ) {
       this.componentMap[ 'cBoundingBox' ] = {};
     }
 
+    const boundingBoxPadding = { top: .5, bottom: .5, left: .5, right: .5 }
+
+    if ( definedPadding.hasOwnProperty('top') ) {
+      boundingBoxPadding.top = definedPadding.top;
+    }
+
+    if ( definedPadding.hasOwnProperty('bottom') ) {
+      boundingBoxPadding.bottom = definedPadding.bottom;
+    }
+
+    if ( definedPadding.hasOwnProperty('left') ) {
+      boundingBoxPadding.left = definedPadding.left;
+    }
+
+    if ( definedPadding.hasOwnProperty('right') ) {
+      boundingBoxPadding.right = definedPadding.right;
+    }
+
     if ( ! this.entities[id].components.hasOwnProperty( 'cBoundingBox' ) ) {
-      this.entities[id]['components']['cBoundingBox'] = new CBoundingBox( new Vec2(x, y), width, height );
+      this.entities[id]['components']['cBoundingBox'] = new CBoundingBox( width, height, boundingBoxPadding );
       this.componentMap['cBoundingBox'][id] = this.entities[id]['components']['cBoundingBox'];
     }
   }
 
-  addCSprite( id ) {
+  addCSprite( id, spritesheetData ) {
     if ( ! this.componentMap.hasOwnProperty( 'cSprite' ) ) {
       this.componentMap[ 'cSprite' ] = {};
     }
 
     if ( ! this.entities[id].components.hasOwnProperty( 'cSprite' ) ) {
-      this.entities[id]['components']['cSprite'] = new CSprite();
+      this.entities[id]['components']['cSprite'] = new CSprite( spritesheetData );
       this.componentMap['cSprite'][id] = this.entities[id]['components']['cSprite'];
     }
   }

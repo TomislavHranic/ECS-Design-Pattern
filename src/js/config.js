@@ -1,6 +1,6 @@
 export const states = {
-  STAND_RIGHT : 0,
-  STAND_LEFT  : 1,
+  STAND_LEFT  : 0,
+  STAND_RIGHT : 1,
   JUMP_LEFT   : 2,
   JUMP_RIGHT  : 3,
   CROUCH_LEFT : 4,
