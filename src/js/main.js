@@ -8,12 +8,10 @@ canvas.height = 240;
 canvas.width = Math.floor(240*16/9);
 
 const game = new Game( ctx, canvas.width, canvas.height );
-game.setScene( 'intro' );
 
 let lastTime = 0;
 
 start.addEventListener( 'click', () => {
-  if ( game.scene ) {
 
     function gameLoop(timestamp) {
       const deltaTime = timestamp - lastTime;
@@ -29,5 +27,4 @@ start.addEventListener( 'click', () => {
     }
 
     gameLoop(0);
-  }
 });

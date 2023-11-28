@@ -65,7 +65,6 @@ function checkBlockCollision(entity, checkedAgainstentity) {
     return;
   }
 
-
   // If we came from below: invert y velocity
   if ( entityTop < entityPreviousTop && entityTop <= againstBottom ) {
     if ( entity.components.cState.value === states.JUMP_LEFT || entity.components.cState.value === states.JUMP_RIGHT  ) {

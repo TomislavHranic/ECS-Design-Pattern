@@ -1,4 +1,4 @@
-import Scene from "./class/scene.js";
+import { sSceneSwitcher } from "./system/sSceneSwitcher.js";
 
 export default class Game {
   constructor( ctx, width, height ) {
@@ -24,12 +24,14 @@ export default class Game {
         }
       });
     }
+
+    this.setScene( 'example1' );
   }
 
   // Set scene
   setScene( sceneName ) {
     this.removeInputListener();
-    this.scene = new Scene( this, sceneName );
+    this.scene = sSceneSwitcher( this, sceneName );
     this.scene.init();
     this.addInputListener();
   }
@@ -48,12 +50,24 @@ export default class Game {
   }
 
 
-  // Update the scene
+  // Update
   update() {
+    // update game
     Object.keys(this.scene.entityManager.systemMap).forEach( systemName => {
       this.scene.entityManager.systemMap[systemName].forEach( entityId => {
         this.scene.systems[systemName]( this, entityId );
       });
+    });
+
+    // reload scene
+    Object.values( this.scene.entityManager.entityTypeMap.player ).forEach( (player) => {
+      if ( player.components.cTransform.position.y > this.height) {
+        if ( this.scene.sceneName === 'example1' ) {
+          this.setScene('example2');
+        } else {
+          this.setScene('example1');
+        }
+      }
     });
   }
 }
