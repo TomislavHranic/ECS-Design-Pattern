@@ -1,9 +1,9 @@
 export default class Entity {
-  constructor( id, type, parentId = null ) {
+  constructor( id, args ) {
     this.id         = id;
-    this.type       = type;
-    this.parentId   = parentId;
+    this.type       = args.type;
+    //this.parentId   = 0;
     this.components = {};
-    this.alive      = true;
+    this.alive      = args.alive;
   }
 }

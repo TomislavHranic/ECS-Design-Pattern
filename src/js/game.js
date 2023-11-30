@@ -60,14 +60,16 @@ export default class Game {
     });
 
     // reload scene
-    Object.values( this.scene.entityManager.entityTypeMap.player ).forEach( (player) => {
-      if ( player.components.cTransform.position.y > this.height) {
-        if ( this.scene.sceneName === 'example1' ) {
-          this.setScene('example2');
-        } else {
-          this.setScene('example1');
+    if ( this.scene.entityManager.entityTypeMap.hasOwnProperty('player') ) {
+      Object.values( this.scene.entityManager.entityTypeMap.player ).forEach( (player) => {
+        if ( player.components.cTransform.position.y > this.height) {
+          if ( this.scene.sceneName === 'example1' ) {
+            this.setScene('example2');
+          } else {
+            this.setScene('example1');
+          }
         }
-      }
-    });
+      });
+    }
   }
 }

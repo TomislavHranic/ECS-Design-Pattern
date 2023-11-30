@@ -17,40 +17,40 @@ export default class Scene {
   init() {
   }
 
-  mapEntitiesToSystems( entityId, systems = [] ) {
-    systems.forEach(system => {
-      if ( ! this.entityManager.systemMap.hasOwnProperty(system) ) {
-        this.entityManager.systemMap[system] = [];
-      }
+  // mapEntitiesToSystems( entityId, systems = [] ) {
+  //   systems.forEach(system => {
+  //     if ( ! this.entityManager.systemMap.hasOwnProperty(system) ) {
+  //       this.entityManager.systemMap[system] = [];
+  //     }
 
-      this.entityManager.systemMap[system].push(entityId);
-    });
-  }
+  //     this.entityManager.systemMap[system].push(entityId);
+  //   });
+  // }
 
   // Add systems
-  addSystem( systemName ) {
-    switch ( systemName ) {
-      case 'sRender':
-        this.addSRender();
-        break;
-      case 'sGravity':
-        this.addSGravity();
-        break;
-      case 'sMovement':
-        this.addSMovement();
-        break;
-      case 'sInputHandler':
-        this.addSInputHandler();
-        break;
-      case 'sSpritesheetAnimation':
-        this.addSSpritesheetAnimation();
-        break;
-      case 'sCollisionDetection':
-        this.addSCollisionDetection();
-      default:
-        break;
-    }
-  }
+  // addSystem( systemName ) {
+  //   switch ( systemName ) {
+  //     case 'sRender':
+  //       this.addSRender();
+  //       break;
+  //     case 'sGravity':
+  //       this.addSGravity();
+  //       break;
+  //     case 'sMovement':
+  //       this.addSMovement();
+  //       break;
+  //     case 'sInputHandler':
+  //       this.addSInputHandler();
+  //       break;
+  //     case 'sSpritesheetAnimation':
+  //       this.addSSpritesheetAnimation();
+  //       break;
+  //     case 'sCollisionDetection':
+  //       this.addSCollisionDetection();
+  //     default:
+  //       break;
+  //   }
+  // }
 
   addSGravity() {
     if ( ! this.systems.hasOwnProperty( 'sGravity' ) ) {

@@ -10,3 +10,9 @@ export const states = {
   WALK_LEFT   : 8,
   WALK_RIGHT  : 9,
 }
+
+export const config = {
+  debug                   : true,
+  defaultTransformSize    : 16,
+  defaultTransformRotation: 0,
+}

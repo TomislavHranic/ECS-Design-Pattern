@@ -1,8 +1,9 @@
-import Vec2 from "../class/vec2.js";
-
 export default class CTransform {
-  constructor( p = new Vec2(), v = new Vec2() ) {
-    this.position = p;
-    this.velocity = v;
+  constructor( args ) {
+    this.position = args.position;
+    this.velocity = args.velocity;
+    this.width    = args.width;
+    this.height   = args.height;
+    this.rotation = args.rotation;
   }
 }
